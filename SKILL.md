@@ -128,7 +128,7 @@ lighting 5-6, ink 6, textures 5-6, characters 7, depth 6-7, composition 6-7 (fro
   - Blinks every 0.5-2.3 s, lasting 4 f.
 
 ## Look-match loop (how the bridge look was reached; reuse for any "make it look like X" pass)
-1. **Measure the reference first.** One analysis agent per topic (motion, depth, textures, characters, lighting, outlines, grade), each writing numbers, not adjectives, to `references/reports/<topic>.md`. Shared brief: `compare/CONTEXT.md`. Reports are the source of truth for every agent after.
+1. **Measure the reference first.** One analysis agent per topic (motion, depth, textures, characters, lighting, outlines, grade), each writing numbers, not adjectives, to `references/reports/<topic>.md`. Shared brief: `references/reports/CONTEXT.md`. Reports are the source of truth for every agent after.
 2. **Sandboxes, one owner per file.** Copy the project folder to `src/videos/<name>_{cam,world,mat,char,post}` with entries `src/sandboxes/<n>/index.tsx` (same `index.tsx` as main, only the import path changed). Ownership used for the bridge:
    - cam: story.ts (camera keys, cuts, kicks, DOF table, foreground props)
    - world: world.ts, lights.ts, shade.ts, grade.ts (sun, sky, fog, river, colour, grade)
