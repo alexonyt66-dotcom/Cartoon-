@@ -54,6 +54,10 @@ for i in range(len(diff)):
     else:
         if run_start is not None and i - run_start >= 12: frozen.append((run_start, i))
         run_start = None
+# A freeze that runs to the last frame never meets a "resumed motion" frame,
+# so flush it here or a render that stalls through the end of the export
+# is silently dropped from the report.
+if run_start is not None and len(diff) - run_start >= 12: frozen.append((run_start, len(diff)))
 R.append(f"FRAMES {n}; black {black[:20]}; unplanned white {white[:20]}; frozen spans >=12f {frozen[:20]}")
 R.append(f"POPS (unplanned frame-diff spikes > 3x local median): {pops[:40]}")
 R.append(f"MOTION mean diff {diff.mean():.2f}; frames with diff<0.3 (held): {int((diff < 0.3).sum())} ({(diff < 0.3).mean() * 100:.0f}%)")
