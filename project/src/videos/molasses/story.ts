@@ -181,7 +181,7 @@ const FX = (id: number, f: number) => frontX(SHOTS[id - 1].tau(T(f)));
 export const horseX = (f: number) => FX(1, f) + 7.5 - 0.9 * T(f);
 
 // ---- shot 1: hook ----
-const S1a = (f: number) => { const F = FX(1, f); return dolly([F + 25, 2.2, 2.4], [F - 1, 4.4, 1.5], pushK(f, 0, 0.002), { fov: 50 }); };
+const S1a = (f: number) => { const F = FX(1, f); return dolly([F + 22, 2.4, 9.0], [F - 1, 4.4, -1.0], pushK(f, 0, 0.002), { fov: 50 }); };
 const S1b = (f: number) => { const F = FX(1, f); return dolly([F + 19, 1.0, 5.6], [F - 1, 7.4, 3.5], pushK(f, 52, 0.0025), { fov: 54, roll: 0.04 }); };
 const S1c = (f: number) => { const F = FX(1, f); return dolly([F + 20, 17, 13], [F - 6, 3, -2], pushK(f, 89, 0.002), { fov: 46, roll: -0.03 }); };
 const S1d = (f: number) => { const H = horseX(f); return dolly([H + 3.6, 1.35, 6.6], [H - 1.6, 1.9, -0.4], pushK(f, 117, 0.003), { fov: 44, roll: 0.035 }); };
@@ -191,7 +191,7 @@ const S2b = (f: number) => dolly([20, 1.3, 1.0], [0, 8.5, -30], pushK(f, 240, 0.
 const S2c = (f: number) => dolly([14, 20, -11], [0, 12, -30], pushK(f, 282, 0.002), { fov: 46 });
 // ---- shot 3: leaks + buckets ----
 const S3a = (f: number) => dolly([3.6, 1.65, -11.2], [-0.4, 1.35, -18.2], pushK(f, 352, 0.0025), { fov: 40 });
-const S3b = (f: number) => dolly([0.35, 1.25, -15.6], [-0.2, 0.95, -17.85], pushK(f, 402, 0.003, 0.006, 30), { fov: 36 });
+const S3b = (f: number) => dolly([0.6, 1.3, -14.6], [-0.2, 1.1, -17.85], pushK(f, 402, 0.003, 0.006, 30), { fov: 42 });
 // ---- shot 4: the company's fix ----
 const S4a = (f: number) => dolly([7.6, 1.75, -11.4], [4.3, 1.55, -16.5], pushK(f, 458, 0.0025), { fov: 38 });
 const S4b = (f: number) => dolly([8.5, 3.0, -8.5], [-0.3, 3.4, -19], pushK(f, 493, 0.002), { fov: 46 });

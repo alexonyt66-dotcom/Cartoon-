@@ -103,7 +103,7 @@ const tankMaterial = () => {
 // ---------------- flood heightfield ----------------
 const FX0 = -112, FX1 = 112, FZ0 = -60, FZ1 = 46, FD = 0.5;
 const NXF = Math.round((FX1 - FX0) / FD) + 1, NZF = Math.round((FZ1 - FZ0) / FD) + 1;
-const MOL_DARK = new THREE.Color("#8a4416"), MOL_CREST = new THREE.Color("#d08a34"), MOL_SET = new THREE.Color("#6e3410");
+const MOL_DARK = new THREE.Color("#5a2a0c"), MOL_CREST = new THREE.Color("#a0561a"), MOL_SET = new THREE.Color("#3a1806");
 
 type Mats = Record<string, THREE.Material>;
 
@@ -347,7 +347,8 @@ export class World {
     fg.setAttribute("color", new THREE.BufferAttribute(this.fcol, 3));
     fg.setAttribute("uv", new THREE.BufferAttribute(fuv, 2));
     fg.setIndex(fidx);
-    this.floodMat = twoTone(new THREE.MeshPhongMaterial({ map: molassesHD(), vertexColors: true, color: 0xffffff, specular: "#ffd9a8", shininess: 45, emissive: "#2a0f03" }), 0.6);
+    this.floodMat = twoTone(new THREE.MeshPhongMaterial({ map: molassesHD(), vertexColors: true, color: 0xffffff, specular: "#ffd9a8", shininess: 90, emissive: "#2a0f03" }), 0.6);
+    { const base = this.floodMat.onBeforeCompile; this.floodMat.onBeforeCompile = (sh, r) => { base.call(this.floodMat, sh, r); sh.fragmentShader = sh.fragmentShader.replace("mix( uShadeCol, lit, sunTerm )", "mix( uShadeCol * vec3( 1.35, 0.95, 0.5 ), lit, sunTerm )"); }; this.floodMat.customProgramCacheKey = () => "flood2"; } // warm-brown shade, not violet
     this.flood = new THREE.Mesh(fg, this.floodMat); this.flood.receiveShadow = true; this.flood.castShadow = false; this.flood.frustumCulled = false;
     S.add(this.flood);
 
@@ -634,7 +635,7 @@ export class World {
       const h = floodH(fl, x, z); H[n] = h;
       P[n * 3 + 1] = h > 0.005 ? h + 0.02 : -0.4;
       const r = Math.hypot(x - TANK[0], z - TANK[2]), sh = sheetD(fl.ts, r);
-      const crest = Math.pow(clamp01((h - sh) / Math.max(0.5, Hc)), 1.4) * (1 - fl.set) + 0.25 * clamp01(1 - Math.abs(r - R) / 3) * (1 - fl.set);
+      const crest = r < TANK_R + 1.5 ? 0 : Math.pow(clamp01((h - sh) / Math.max(0.5, Hc)), 1.4) * (1 - fl.set) + 0.25 * clamp01(1 - Math.abs(r - R) / 3) * (1 - fl.set);
       Cc[n * 3] = dark.r + (MOL_CREST.r - dark.r) * crest; Cc[n * 3 + 1] = dark.g + (MOL_CREST.g - dark.g) * crest; Cc[n * 3 + 2] = dark.b + (MOL_CREST.b - dark.b) * crest;
     }
     const g = this.flood.geometry;

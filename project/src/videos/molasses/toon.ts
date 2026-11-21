@@ -984,6 +984,10 @@ const drawProps = (p: Pen, prop: Prop, hands: P2[], u: number, HH: number, tcx: 
     p.poly(body, null, 2.6 * u);
     p.ell(cx, y0, wt, 6 * u, up ? "#2a1a14" : fill > 0.04 ? MOL : "#3a3540", 2.6 * u);
     if (!up && fill > 0.04) p.ell(cx - 6 * u, y0 - 1.5 * u, 6 * u, 1.6 * u, MOL_HI, 0);
+    if (up) { // wire handle hanging below the upturned pail + two ribs
+      p.arc(cx, y0 + 4 * u, wt * 0.95, 14 * u, 20, 160, 2.2 * u);
+      for (const k of [0.33, 0.66]) p.stroke([[cx - (wt + (wb - wt) * k) * 0.98, y0 + (y1 - y0) * k], [cx + (wt + (wb - wt) * k) * 0.98, y0 + (y1 - y0) * k]], 2 * u, "rgba(40,30,40,0.55)");
+    }
     if (up) { // molasses stuck at the rim: a fat lip that refuses to fall
       p.poly([[cx - wt * 0.9, y0], [cx + wt * 0.9, y0], [cx + wt * 0.6, y0 + 5 * u], [cx + 4 * u, y0 + (5 + 10 * pv) * u], [cx - 4 * u, y0 + (5 + 10 * pv) * u], [cx - wt * 0.6, y0 + 5 * u]], MOL, 2.2 * u);
       p.ell(cx + 3 * u, y0 + 3 * u, 4 * u, 1.4 * u, MOL_HI, 0);
@@ -1057,7 +1061,7 @@ const drawProps = (p: Pen, prop: Prop, hands: P2[], u: number, HH: number, tcx: 
 
 // ---------------- molasses short: characters and effects ----------------
 export const NEIGHBOR = (v = 0): Outfit => {
-  const coats = ["#8c3b4a", "#3f6fb5", "#5d7a3a", "#b5653f", "#2f5f6a", "#7b5ac9"];
+  const coats = ["#8c3b4a", "#3f6fb5", "#5d7a3a", "#3e7b4f", "#2f5f6a", "#7b5ac9"];
   const o: Outfit = { jacket: coats[v % 6], pants: "#3b3f52", boots: "#4a3426", skin: SKINS[v % 4], scarf: ["#d9a441", "#c25a7a", "#e8e0cc", "#5a8fc2"][v % 4] };
   if (v % 3 === 1) return { ...o, hat: "bonnet", dress: ["#a8574a", "#5a7fa2", "#7a6a9a"][v % 3] };
   return { ...o, hat: "cap", cap: ["#5a4a3e", "#3e4a5a", "#6a5a3a"][v % 3], moustache: v % 4 === 0 ? "#4a3020" : undefined };
@@ -1111,12 +1115,12 @@ export const fxMolSplash = (p: Pen, t: number, seed = 0) => {
     pts.push([x + 10 * Math.sin(seed * 3 + i), 380 - (40 + 230 * sp * (0.7 + 0.3 * Math.sin(i * 1.9 + seed))) * rise]);
   }
   if (rise > 0.03) {
-    p.poly([[40, 400], ...pts, [560, 400]], "#b8682a", 8);
-    p.poly([[110, 400], ...pts.slice(2, 13).map(([x, y]) => [x, y + 0.45 * (400 - y)] as P2), [490, 400]], "#e09a4a", 0);
+    p.poly([[40, 400], ...pts, [560, 400]], "#5a2a0e", 8);
+    p.poly([[110, 400], ...pts.slice(2, 13).map(([x, y]) => [x, y + 0.45 * (400 - y)] as P2), [490, 400]], "#8a4a1c", 0);
   }
   for (let i = 0; i < 6; i++) { // flung drops
     const a = rad(205 + i * 26), d = 120 + 260 * t, y = 330 + d * Math.sin(a) + 420 * t * t, r = 20 * (1 - 0.6 * t) + 5;
-    if (t > 0.1 && y < 390) p.ell(300 + d * Math.cos(a), y, r, r * 1.3, "#b8682a", 6);
+    if (t > 0.1 && y < 390) p.ell(300 + d * Math.cos(a), y, r, r * 1.3, "#4a2410", 6);
   }
 };
 /** sweet smell: three wavy rising ribbons with a heart-ish swirl, on a 300 x 600 canvas; t 0..1 (loops) */
@@ -1124,8 +1128,9 @@ export const fxSmell = (p: Pen, t: number) => {
   for (let k = 0; k < 3; k++) {
     const pts: P2[] = [];
     for (let y = 560; y > 80; y -= 14) pts.push([90 + k * 60 + 22 * Math.sin(y * 0.03 + t * two() + k * 2), y]);
-    p.stroke(pts, 16, "#f4c2c8");
-    p.stroke(pts, 7, "#fbe6d4");
+    p.stroke(pts, 20, "#241726");
+    p.stroke(pts, 14, "#9a5a1e");
+    p.stroke(pts, 5, "#e8b070");
   }
 };
 const two = () => Math.PI * 2;

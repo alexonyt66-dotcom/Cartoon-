@@ -297,7 +297,7 @@ const stuck = (out: Stage, cam: CamInfo, t: number, list: [number, number, Expr,
   list.forEach(([x, z, expr, i]) => {
     const fl = floodH(st.flood, x, z), sink = Math.min(0.12, fl * 0.2);
     const ph = q((t * 0.8 + hh(i)) % 1, 24);
-    out.places.push(person(cam, { i, o: SAILOR(i), okey: `sailor${i % 4}` }, x, -sink, z, front, { mode: "stand", expr, prop: "flail", phase: ph, tilt: 4 * Math.sin(t * 1.6 + i), blink: lidAt(t, i) }));
+    out.places.push(person(cam, { i, o: SAILOR(i), okey: `sailor${i % 4}` }, x, -sink - 0.22, z, front, { mode: "stand", expr, prop: "shrug", phase: ph, tilt: -7 + 5 * Math.sin(t * 2.2 + i), blink: lidAt(t, i) }));
   });
 };
 const kitchen = (out: Stage, cam: CamInfo, t: number, f: number) => {
@@ -344,7 +344,7 @@ const callback = (out: Stage, cam: CamInfo, t: number, f: number, st: State) => 
   // the drop: stretches off the rim on "slow", lets go, falls into the sheet
   // rim of the raised pail (toon.ts bucketUp: right hand ~ +181 units across, rim ~ 352 units down the card)
   const rimY = -Math.min(0.1, fl * 0.2) + (975 - 352) * SU, bx = x + cam.right.x * 0.39, bz = z + cam.right.z * 0.39 + 0.02;
-  if (f >= 2008 && f < 2038) out.fx.push({ key: `drop${q(stretch, 30)}`, cw: 120, ch: 300, draw: (p) => fxDrop(p, stretch), x: bx, y: rimY - 0.25, z: bz, w: 0.1, h: 0.25 });
+  if (f >= 2008 && f < 2038) out.fx.push({ key: `drop${q(stretch, 30)}`, cw: 120, ch: 300, draw: (p) => fxDrop(p, stretch), x: bx, y: rimY - 0.2, z: bz, w: 0.1, h: 0.25 });
   if (f >= 2038 && f < 2046) { const dt = (f - 2038) / FPS; out.fx.push({ key: "drip", cw: 100, ch: 160, draw: fxDrip, x: bx, y: rimY - 0.4 - 4.9 * dt * dt * 6, z: bz, w: 0.09, h: 0.14 }); }
 };
 
