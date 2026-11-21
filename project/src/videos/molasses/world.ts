@@ -526,7 +526,7 @@ export class World {
     this.icicles.visible = winter && (id === 5);
     for (const c of this.cols) c.s.mesh.visible = winter; // the elevated came down long before those summers
     for (const g2 of this.girders) g2.s.mesh.visible = winter;
-    this.floodMat.emissive.set(s.light === "golden" ? "#4a1c06" : "#2a0f03");
+    this.floodMat.emissive.set(s.light === "golden" ? "#583206" : "#2a0f03");
     // ---- painters' swing stage (shot 4) ----
     this.swingStage.visible = id === 4 && f >= 480 && f < 537;
     if (this.swingStage.visible) {

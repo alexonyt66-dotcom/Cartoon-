@@ -1028,7 +1028,7 @@ const drawProps = (p: Pen, prop: Prop, hands: P2[], u: number, HH: number, tcx: 
   } else if (pk === "honey" || pk === "honeyCold") {
     const cold = pk === "honeyCold";
     const [hx, hy] = R1;
-    const ang = cold ? Math.PI * (0.15 + 0.85 * pv) : rad(-20 - 95 * pv); // warm: tips over the plate; cold: turned fully over, nothing moves
+    const ang = cold ? Math.PI * (0.15 + 0.72 * pv) : rad(-20 - 95 * pv); // warm: tips over the plate; cold: turned fully over, nothing moves
     const jar: P2[] = [[-14, 20], [14, 20], [15, -14], [10, -20], [-10, -20], [-15, -14]].map(([x, y]) => [x * u, y * u]);
     const Rj = (pts: P2[]): P2[] => pts.map(([x, y]) => [hx + 10 * u + x * Math.cos(ang) - y * Math.sin(ang), hy + x * Math.sin(ang) + y * Math.cos(ang)]);
     const body = Rj(jar);
@@ -1045,6 +1045,10 @@ const drawProps = (p: Pen, prop: Prop, hands: P2[], u: number, HH: number, tcx: 
       for (let y = mouth[1]; y <= yEnd; y += 8) pts.push([mouth[0] + wob(y), y]);
       p.stroke(pts, 7 * u * Math.min(1, (pv - 0.35) * 4) + 2 * u, "#c7820e");
       p.stroke(pts, 4 * u * Math.min(1, (pv - 0.35) * 4) + 1 * u, HONEY);
+    }
+    if (cold && pv > 0.5) { // the cold honey: a fat blob bulging at the mouth that will not let go
+      p.ell(mouth[0], mouth[1] + 4 * u, 9 * u, 7 * u, "#d08a14", 2.2 * u);
+      p.ell(mouth[0] - 3 * u, mouth[1] + 2 * u, 3 * u, 2 * u, "#ffd27a", 0);
     }
     if (cold) p.dot(L1[0], L1[1], 5.5 * u);
     p.dot(R1[0], R1[1], 5.5 * u);
