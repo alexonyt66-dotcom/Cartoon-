@@ -537,10 +537,12 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
     const pk = Array.isArray(prop) ? prop[0] : prop, pv = Array.isArray(prop) ? clamp(prop[1] as number, 0, 1) : 0;
     const S0 = sh(-1), S1 = sh(1);
     // two-handed props: both hands meet in front of the chest / overhead
-    if (pk === "bucketUp" || pk === "honeyCold") {
-      const hy = S0[1] - (0.55 + 0.25 * pv) * HH;
-      arms.push({ pts: [S0, [tcx - 1.15 * T.a - 6 * u, S0[1] - 0.25 * HH], [tcx - 0.42 * T.a, hy]], front: true });
-      arms.push({ pts: [S1, [tcx + 1.15 * T.a + 6 * u, S1[1] - 0.25 * HH], [tcx + 0.42 * T.a, hy]], front: true });
+    if (pk === "bucketUp") {
+      arms.push({ pts: [S0, [tcx - 1.0 * T.a - 4 * u, S0[1] + 0.4 * HH], [tcx - 0.9 * T.a, S0[1] + 0.55 * HH]], front: false });
+      arms.push({ pts: [S1, [tcx + 1.25 * T.a + 12 * u, S1[1] - 0.05 * HH], [tcx + 1.5 * T.a + 20 * u, S1[1] - 0.45 * HH]], front: true });
+    } else if (pk === "honeyCold") {
+      arms.push({ pts: [S0, [tcx - 1.0 * T.a - 4 * u, S0[1] + 0.42 * HH], [tcx - 0.25 * T.a, S0[1] + 0.36 * HH]], front: true });
+      arms.push({ pts: [S1, [tcx + 1.1 * T.a + 6 * u, S1[1] + 0.3 * HH], [tcx + 0.55 * T.a + 6 * u, S1[1] + 0.3 * HH]], front: true });
     } else if (pk === "bags") {
       for (const sd of [-1, 1]) { const Sx = sh(sd); arms.push({ pts: [Sx, [tcx + sd * (1.12 * T.a + 4 * u), Sx[1] + 0.48 * HH], [tcx + sd * (1.18 * T.a + 6 * u), chin + 1.0 * HH]], front: true }); }
     } else if (pk === "flail") {
@@ -994,9 +996,9 @@ const drawProps = (p: Pen, prop: Prop, hands: P2[], u: number, HH: number, tcx: 
     pail(hx, hy + 12 * u, false, pv);
     p.dot(hx, hy, 5.5 * u);
   } else if (pk === "bucketUp") {
-    const cx = (L1[0] + R1[0]) / 2, top = Math.min(L1[1], R1[1]) - 28 * u;
-    pail(cx, top, true, 1);
-    p.dot(L1[0], L1[1], 5.5 * u); p.dot(R1[0], R1[1], 5.5 * u);
+    const [hx, hy] = R1;
+    pail(hx, hy - 30 * u, true, 1);
+    p.dot(hx, hy, 5.5 * u);
   } else if (pk === "brush") {
     const [hx, hy] = R1;
     p.band([[hx, hy + 10 * u], [hx + 4 * u, hy - 30 * u]], "#c8a06a", 4 * u, 1.4 * u, "round");
@@ -1025,8 +1027,8 @@ const drawProps = (p: Pen, prop: Prop, hands: P2[], u: number, HH: number, tcx: 
     }
   } else if (pk === "honey" || pk === "honeyCold") {
     const cold = pk === "honeyCold";
-    const [hx, hy] = cold ? [(L1[0] + R1[0]) / 2, Math.min(L1[1], R1[1]) - 4 * u] as P2 : R1;
-    const ang = cold ? Math.PI : rad(-20 - 95 * pv); // warm: tips over the plate; cold: upside down overhead
+    const [hx, hy] = R1;
+    const ang = cold ? Math.PI * (0.15 + 0.85 * pv) : rad(-20 - 95 * pv); // warm: tips over the plate; cold: turned fully over, nothing moves
     const jar: P2[] = [[-14, 20], [14, 20], [15, -14], [10, -20], [-10, -20], [-15, -14]].map(([x, y]) => [x * u, y * u]);
     const Rj = (pts: P2[]): P2[] => pts.map(([x, y]) => [hx + 10 * u + x * Math.cos(ang) - y * Math.sin(ang), hy + x * Math.sin(ang) + y * Math.cos(ang)]);
     const body = Rj(jar);
@@ -1097,12 +1099,20 @@ export const horseSide = (p: Pen, phase: number, light = DEF_LIGHT) => {
 
 export const fxDrip = (p: Pen) => { p.poly([[50, 10], [78, 100], [70, 135], [50, 148], [30, 135], [22, 100]], MOL, 7); p.ell(42, 110, 7, 14, MOL_HI, 0); };
 export const fxDot = (p: Pen) => { p.ell(32, 32, 24, 24, "#4a4f58", 6); p.ell(26, 26, 7, 7, "#c9ccd2", 0); };
-/** brown splash crown at the wave front on a 600 x 400 canvas; t 0..1 */
+/** molasses splash crown thrown off the crest on a 600 x 400 canvas; t 0..1 (loops), seed varies the spikes */
 export const fxMolSplash = (p: Pen, t: number, seed = 0) => {
-  const rise = Math.sin(Math.min(1, t * 1.2) * Math.PI);
-  for (let i = 0; i < 7; i++) {
-    const a = rad(200 + i * 22 + 7 * Math.sin(seed + i)), d = 60 + 200 * t, r = (34 - i * 2) * (1 - 0.5 * t) + 6;
-    p.ell(300 + d * Math.cos(a), 330 + d * Math.sin(a) * rise + 160 * t * t, r, r * 1.2, i % 2 ? MOL : "#6a3414", 8);
+  const rise = Math.sin(Math.min(1, t * 1.15) * Math.PI), pts: P2[] = [];
+  for (let i = 0; i <= 14; i++) {
+    const x = 60 + (480 * i) / 14, sp = i % 2 ? 1 : 0.45;
+    pts.push([x + 10 * Math.sin(seed * 3 + i), 380 - (40 + 230 * sp * (0.7 + 0.3 * Math.sin(i * 1.9 + seed))) * rise]);
+  }
+  if (rise > 0.03) {
+    p.poly([[40, 400], ...pts, [560, 400]], "#b8682a", 8);
+    p.poly([[110, 400], ...pts.slice(2, 13).map(([x, y]) => [x, y + 0.45 * (400 - y)] as P2), [490, 400]], "#e09a4a", 0);
+  }
+  for (let i = 0; i < 6; i++) { // flung drops
+    const a = rad(205 + i * 26), d = 120 + 260 * t, y = 330 + d * Math.sin(a) + 420 * t * t, r = 20 * (1 - 0.6 * t) + 5;
+    if (t > 0.1 && y < 390) p.ell(300 + d * Math.cos(a), y, r, r * 1.3, "#b8682a", 6);
   }
 };
 /** sweet smell: three wavy rising ribbons with a heart-ish swirl, on a 300 x 600 canvas; t 0..1 (loops) */

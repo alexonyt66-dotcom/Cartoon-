@@ -187,7 +187,7 @@ const S1c = (f: number) => { const F = FX(1, f); return dolly([F + 20, 17, 13], 
 const S1d = (f: number) => { const H = horseX(f); return dolly([H + 3.6, 1.35, 6.6], [H - 1.6, 1.9, -0.4], pushK(f, 117, 0.003), { fov: 44, roll: 0.035 }); };
 // ---- shot 2: setting (harbour aerial -> low under the tank -> crane up) ----
 const S2a = (f: number) => zoom([-46, 30, -98], [2, 5, -22], 44, pushK(f, 162, 0.002));
-const S2b = (f: number) => dolly([15, 1.3, -1.5], [0, 8.5, -30], pushK(f, 240, 0.0018), { fov: 52 });
+const S2b = (f: number) => dolly([20, 1.3, 1.0], [0, 8.5, -30], pushK(f, 240, 0.0018), { fov: 52 });
 const S2c = (f: number) => dolly([14, 20, -11], [0, 12, -30], pushK(f, 282, 0.002), { fov: 46 });
 // ---- shot 3: leaks + buckets ----
 const S3a = (f: number) => dolly([3.6, 1.65, -11.2], [-0.4, 1.35, -18.2], pushK(f, 352, 0.0025), { fov: 40 });
@@ -205,7 +205,7 @@ const S6b = (f: number) => dolly([2.4, 5.2, -15.2], [0.4, 5.0, -18.35], pushK(f,
 const S6c = (f: number) => dolly([3.6, 5.5, -14.2], [0.4, 5.0, -18.35], pushK(f, 724, 0.003), { fov: 38, roll: 0.04 });
 // ---- shot 7: lunch, split ----
 const S7a = (f: number) => dolly([-7.2, 1.35, 1.5], [-10.4, 1.25, -8.3], pushK(f, 768, 0.0025), { fov: 42 });
-const S7b = (f: number) => dolly([27, 13, 7], [0, 6.5, -30], pushK(f, 815, 0.002, 0.005, 20), { fov: 52 });
+const S7b = (f: number) => dolly([34, 21, 15], [0, 5, -30], pushK(f, 815, 0.002, 0.005, 20), { fov: 50 });
 // ---- shot 8: the wave down the street, the elevated bends ----
 const S8a = (f: number) => dolly([66, 1.3, 3.5], [24, 4.6, -1.5], pushK(f, 846, 0.002), { fov: 48 });
 const S8b = (f: number) => dolly([62, 0.8, 4.5], [30, 8.5, -1.5], pushK(f, 882, 0.0025), { fov: 52, roll: 0.04 });
@@ -226,7 +226,7 @@ const S10c = (f: number) => dolly([K[0] - 1.3, 1.55, K[2] + 3.0], [K[0] - 0.2, 1
 const C = COURT;
 const S13a = (f: number) => zoom([C[0] + 9, 2.2, C[2] + 20], [C[0], 5.5, C[2] - 2], 46, pushK(f, 1586, 0.002));
 const S13b = (f: number) => dolly([C[0] + 2.6, 2.4, C[2] + 7.6], [C[0] + 0.3, 2.3, C[2] + 3.2], pushK(f, 1619, 0.0025), { fov: 40 });
-const S13c = (f: number) => zoom([C[0] + 4, 1.8, C[2] + 7], [C[0] - 3.0, 18.3, C[2] - 9], 30, pushK(f, 1656, 0.0025, 0.005, 30), { roll: 0.04 });
+const S13c = (f: number) => zoom([C[0] + 2.2, 1.6, C[2] + 10], [C[0] + 8.2, 9.6, C[2] + 2], 34, pushK(f, 1656, 0.0025, 0.005, 30), { roll: 0.04 });
 // ---- shot 14: the engineer signs off a new tank ----
 const S14a = (f: number) => dolly([5.6, 1.7, -11.6], [3.2, 1.75, -16.3], pushK(f, 1704, 0.0025), { fov: 40 });
 const S14b = (f: number) => dolly([3.35, 1.62, -15.25], [3.35, 1.42, -15.92], pushK(f, 1748, 0.002), { fov: 40 });
@@ -235,7 +235,7 @@ const S15a = (f: number) => zoom([30, 5, 6], [0, 2.5, -16], 46, pushK(f, 1804, 0
 const S15b = (f: number) => dolly([-2.6, 1.7, -2.4], [-4.4, 1.62, -6.2], pushK(f, 1860, 0.0025, 0.005, 28), { fov: 38 });
 // ---- shot 16: callback, the bucket in January ----
 const S16a = (f: number) => dolly([30.2, 1.7, 5.6], [27.2, 1.6, 1.6], pushK(f, 1908, 0.002), { fov: 40 });
-const S16b = (f: number) => dolly([29.0, 1.62, 3.9], [27.2, 1.55, 1.6], pushK(f, 1995, 0.0025, 0.006, 30), { fov: 36 });
+const S16b = (f: number) => dolly([29.2, 1.55, 4.3], [27.45, 1.4, 1.6], pushK(f, 1995, 0.0025, 0.006, 30), { fov: 38 });
 const CRANE: V3[] = [[38, 9, 18], [60, 26, 34], [0, 2, -14]];
 const S16c = (f: number): Shot => {
   const a = S16b(2046), s = glide((f - 2046) / 39), r = 1 - s, [Cc, B, L] = CRANE;

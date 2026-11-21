@@ -15,7 +15,7 @@ import { NOINK } from "./ink";
 import { Pool, Actor, Fx, stage } from "./cast";
 import {
   FPS, SHOTS, camAt, V3, smooth, clamp01, easeOut, FOREGROUND, ShotDef, TANK, TANK_R, TANK_H, EL_Z, EL_Y, EL_COLS, QUAY_Z, KITCHEN, COURT,
-  stateAt, floodH, State, frontR,
+  stateAt, floodH, State, frontR, crestH, sheetD,
 } from "./story";
 
 // ---------------- assets ----------------
@@ -48,7 +48,7 @@ const smokeTex = () => ctex("smoke", 256, 256, (g) => {
   for (const [x, y, r, c] of [[90, 150, 60, "#8f8d96"], [150, 120, 70, "#a3a1aa"], [170, 165, 55, "#8f8d96"], [120, 100, 50, "#b4b2ba"]] as const) p.ell(x, y, r, r * 0.85, c, 0);
 });
 /** per-shot sun override (story.ts ShotDef sunAz/sunEl win) */
-const SUN_SHOT: Record<number, { az?: number; el?: number }> = { 2: { az: 110 }, 9: { az: -40, el: 7 }, 11: { az: 30 }, 12: { az: 8 } };
+const SUN_SHOT: Record<number, { az?: number; el?: number }> = { 1: { az: 145, el: 40 }, 2: { az: 110 }, 7: { az: 140 }, 8: { az: 150, el: 42 }, 9: { az: -40, el: 7 }, 11: { az: 30 }, 12: { az: 8 } };
 
 const sightLines = (): Ray[] => {
   const out: Ray[] = [];
@@ -101,7 +101,7 @@ const tankMaterial = () => {
 };
 
 // ---------------- flood heightfield ----------------
-const FX0 = -112, FX1 = 112, FZ0 = -60, FZ1 = 46, FD = 0.7;
+const FX0 = -112, FX1 = 112, FZ0 = -60, FZ1 = 46, FD = 0.5;
 const NXF = Math.round((FX1 - FX0) / FD) + 1, NZF = Math.round((FZ1 - FZ0) / FD) + 1;
 const MOL_DARK = new THREE.Color("#8a4416"), MOL_CREST = new THREE.Color("#d08a34"), MOL_SET = new THREE.Color("#6e3410");
 
@@ -175,7 +175,7 @@ export class World {
     this.hemi = new THREE.HemisphereLight("#cfe6ff", "#6c5c8c", 1.1);
     this.sun = new THREE.DirectionalLight("#fff0d6", 2.6);
     this.sun.castShadow = true;
-    this.sun.shadow.mapSize.set(4096, 4096);
+    this.sun.shadow.mapSize.set(2048, 2048); // 4096 in the bridge: halved for CPU rendering
     R.add(this.hemi, this.sun, this.sun.target);
     this.cloudMaps = { day: [0, 1, 2, 3].map((k) => cloudHD(k, LOOK.day.cloud)), golden: [0, 1, 2, 3].map((k) => cloudHD(k, LOOK.golden.cloud)) };
     for (let i = 0; i < 9; i++) {
@@ -423,11 +423,12 @@ export class World {
     cb.add(tri(V(C[0] - 10, 10.8, C[2] - 4.25), V(C[0] + 10, 10.8, C[2] - 4.25), V(C[0], 14.2, C[2] - 4.25)), lam("pediment", () => ({ color: "#e6ded0" })));
     cb.add(quad(V(C[0] - 10.3, 10.75, C[2] - 4.0), V(C[0], 14.4, C[2] - 4.0), V(C[0], 14.4, C[2] - 7.6), V(C[0] - 10.3, 10.75, C[2] - 7.6)), roofMat("#8f97a8"));
     cb.add(quad(V(C[0], 14.4, C[2] - 4.0), V(C[0] + 10.3, 10.75, C[2] - 4.0), V(C[0] + 10.3, 10.75, C[2] - 7.6), V(C[0], 14.4, C[2] - 7.6)), roofMat("#8f97a8"));
-    cb.add(new THREE.CylinderGeometry(0.07, 0.09, 8, 10), lam("pole", () => ({ color: "#d9d4c8" })), new THREE.Matrix4().makeTranslation(C[0] - 4.2, 12 + 4, C[2] - 9));
+    cb.add(new THREE.CylinderGeometry(0.08, 0.11, 11, 10), lam("pole", () => ({ color: "#d9d4c8" })), new THREE.Matrix4().makeTranslation(C[0] + 7, 5.5, C[2] + 2));
+    cb.add(new THREE.SphereGeometry(0.16, 12, 8), lam("poleBall", () => ({ color: "#e8c45a" })), new THREE.Matrix4().makeTranslation(C[0] + 7, 11.1, C[2] + 2));
     for (let i = 0; i < 10; i++) { const zz = C[2] + 4 + i * 6; for (const s of [-1, 1]) house(cb, C[0] + s * 26, zz, s < 0 ? Math.PI / 2 : -Math.PI / 2, 6, 8, 9.8, i % 8); }
     cb.build(CS);
     this.flag = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.37, 14, 1), lam("flag48", () => ({ map: flag48(), side: THREE.DoubleSide })));
-    this.flag.position.set(C[0] - 4.2, 18.6, C[2] - 9); this.flag.castShadow = true; this.flag.frustumCulled = false; CS.add(this.flag);
+    this.flag.position.set(C[0] + 7, 10.1, C[2] + 2); this.flag.castShadow = true; this.flag.frustumCulled = false; CS.add(this.flag);
 
     setSight([]);
     for (const fg2 of FOREGROUND) {
@@ -523,6 +524,9 @@ export class World {
     for (const [col, m] of ROOFS) m.map = (winter ? this.snowRoof.get(col) : this.bareRoof.get(col)) ?? m.map;
     this.yardWinter.visible = winter; this.yardSummer.visible = !winter;
     this.icicles.visible = winter && (id === 5);
+    for (const c of this.cols) c.s.mesh.visible = winter; // the elevated came down long before those summers
+    for (const g2 of this.girders) g2.s.mesh.visible = winter;
+    this.floodMat.emissive.set(s.light === "golden" ? "#4a1c06" : "#2a0f03");
     // ---- painters' swing stage (shot 4) ----
     this.swingStage.visible = id === 4 && f >= 480 && f < 537;
     if (this.swingStage.visible) {
@@ -623,13 +627,14 @@ export class World {
     this.flood.visible = fl.on && st.tank.shown;
     if (!this.flood.visible) return;
     const P = this.fpos, Cc = this.fcol, H = this.fh;
-    const R = frontR(fl.ts);
+    const R = frontR(fl.ts), Hc = crestH(fl.ts);
     const dark = MOL_DARK.clone().lerp(MOL_SET, fl.set);
     for (let j = 0; j < NZF; j++) for (let i = 0; i < NXF; i++) {
       const n = j * NXF + i, x = FX0 + i * FD, z = FZ0 + j * FD;
       const h = floodH(fl, x, z); H[n] = h;
       P[n * 3 + 1] = h > 0.005 ? h + 0.02 : -0.4;
-      const r = Math.hypot(x - TANK[0], z - TANK[2]), crest = clamp01(1 - Math.abs(r - R) / 4) * (1 - fl.set);
+      const r = Math.hypot(x - TANK[0], z - TANK[2]), sh = sheetD(fl.ts, r);
+      const crest = Math.pow(clamp01((h - sh) / Math.max(0.5, Hc)), 1.4) * (1 - fl.set) + 0.25 * clamp01(1 - Math.abs(r - R) / 3) * (1 - fl.set);
       Cc[n * 3] = dark.r + (MOL_CREST.r - dark.r) * crest; Cc[n * 3 + 1] = dark.g + (MOL_CREST.g - dark.g) * crest; Cc[n * 3 + 2] = dark.b + (MOL_CREST.b - dark.b) * crest;
     }
     const g = this.flood.geometry;

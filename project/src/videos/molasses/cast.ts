@@ -264,8 +264,8 @@ const groan = (out: Stage, cam: CamInfo, t: number, f: number) => {
   }
   // rivets: each pops with a spark and flies out toward the street
   RIVETS.forEach((t0, i) => {
-    const dt = t - t0, x = 0.4 + [-0.9, 0.5, -0.2, 1.1, -0.6, 0.9][i], y = 5 + (i % 2 ? 0.12 : -0.12), z = zWall(x) + 0.03;
-    if (dt >= 0 && dt < 0.25) { const u = q(dt / 0.25, 30); out.fx.push({ key: `burst${u}`, cw: 500, ch: 500, draw: (p) => fxBurst(p, u), x, y, z: z + 0.05, w: 1.1, h: 1.1 }); }
+    const dt = t - t0, x = 0.4 + [-0.3, 0.2, -0.1, 0.35, -0.25, 0.3][i], y = 5 + (i % 2 ? 0.12 : -0.12), z = zWall(x) + 0.03;
+    if (dt >= 0 && dt < 0.25) { const u = q(dt / 0.25, 30); out.fx.push({ key: `burst${u}`, cw: 500, ch: 500, draw: (p) => fxBurst(p, u), x, y, z: z + 0.05, w: 0.55, h: 0.55 }); }
     if (dt >= 0 && dt < 0.7) out.fx.push({ key: "rivet", cw: 64, ch: 64, draw: fxDot, x: x + dt * (i % 2 ? 1.6 : -1.4), y: y + 2.5 * dt - 4.9 * dt * dt, z: z + 7 * dt, w: 0.07, h: 0.07 });
   });
 };
@@ -342,7 +342,8 @@ const callback = (out: Stage, cam: CamInfo, t: number, f: number, st: State) => 
   out.places.push(person(cam, { i: 130, o: FOLK[0], okey: "n0" }, x, -Math.min(0.1, fl * 0.2), z, front,
     { mode: "stand", expr: f > 1998 ? "stern" : "neutral", prop: ["bucketUp", q(stretch, 30)], look: 0, blink: lidAt(t, 130, [1998 / FPS]) }));
   // the drop: stretches off the rim on "slow", lets go, falls into the sheet
-  const rimY = -Math.min(0.1, fl * 0.2) + (975 - 330) * SU, bx = x + 0.0, bz = z + 0.02;
+  // rim of the raised pail (toon.ts bucketUp: right hand ~ +181 units across, rim ~ 352 units down the card)
+  const rimY = -Math.min(0.1, fl * 0.2) + (975 - 352) * SU, bx = x + cam.right.x * 0.39, bz = z + cam.right.z * 0.39 + 0.02;
   if (f >= 2008 && f < 2038) out.fx.push({ key: `drop${q(stretch, 30)}`, cw: 120, ch: 300, draw: (p) => fxDrop(p, stretch), x: bx, y: rimY - 0.25, z: bz, w: 0.1, h: 0.25 });
   if (f >= 2038 && f < 2046) { const dt = (f - 2038) / FPS; out.fx.push({ key: "drip", cw: 100, ch: 160, draw: fxDrip, x: bx, y: rimY - 0.4 - 4.9 * dt * dt * 6, z: bz, w: 0.09, h: 0.14 }); }
 };
