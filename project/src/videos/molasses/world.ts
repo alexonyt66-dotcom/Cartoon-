@@ -347,7 +347,7 @@ export class World {
     fg.setAttribute("color", new THREE.BufferAttribute(this.fcol, 3));
     fg.setAttribute("uv", new THREE.BufferAttribute(fuv, 2));
     fg.setIndex(fidx);
-    this.floodMat = twoTone(new THREE.MeshPhongMaterial({ map: molassesHD(), vertexColors: true, color: 0xffffff, specular: "#ffd9a8", shininess: 90, emissive: "#2a0f03" }), 0.6);
+    this.floodMat = twoTone(new THREE.MeshPhongMaterial({ map: molassesHD(), vertexColors: true, color: 0xffffff, specular: "#6a5038", shininess: 60, emissive: "#2a0f03" }), 0.6);
     { const base = this.floodMat.onBeforeCompile; this.floodMat.onBeforeCompile = (sh, r) => { base.call(this.floodMat, sh, r); sh.fragmentShader = sh.fragmentShader.replace("mix( uShadeCol, lit, sunTerm )", "mix( uShadeCol * vec3( 1.35, 0.95, 0.5 ), lit, sunTerm )"); }; this.floodMat.customProgramCacheKey = () => "flood2"; } // warm-brown shade, not violet
     this.flood = new THREE.Mesh(fg, this.floodMat); this.flood.receiveShadow = true; this.flood.castShadow = false; this.flood.frustumCulled = false;
     S.add(this.flood);

@@ -1079,7 +1079,7 @@ export const SUMMER = (v = 0): Outfit => {
 
 /** galloping horse, side view facing +x, on the 600 x 1000 character canvas (hooves at y 975); phase 0..1 */
 export const horseSide = (p: Pen, phase: number, light = DEF_LIGHT) => {
-  const two = Math.PI * 2, bob = 10 * Math.sin(two * phase * 2), col = "#a0623a", dark = mul(col, SH_CLOTH);
+  const two = Math.PI * 2, bob = 10 * Math.sin(two * phase * 2), col = "#e6e0d4", dark = mul(col, SH_CLOTH);
   const by = 650 + bob, legTop = by + 50;
   const leg = (x: number, ph: number, front: boolean) => {
     const a = Math.sin(two * (phase + ph)) * 0.6, b = Math.max(0, Math.cos(two * (phase + ph))) * 0.9;
@@ -1090,7 +1090,7 @@ export const horseSide = (p: Pen, phase: number, light = DEF_LIGHT) => {
   };
   leg(200, 0.55, false); leg(420, 0.05, true);
   // tail streaming back
-  p.line([[115, by - 40], [60, by - 10 + 20 * Math.sin(two * phase)], [20, by + 50]], "#5a3420", 26);
+  p.line([[115, by - 40], [60, by - 10 + 20 * Math.sin(two * phase)], [20, by + 50]], "#6a6470", 26);
   const body = ellPts(300, by, 185, 88);
   p.shadedFill(body, col, dark, light, 185); p.inkRing(body, 12, thickAngle(light));
   // neck + head
@@ -1098,7 +1098,7 @@ export const horseSide = (p: Pen, phase: number, light = DEF_LIGHT) => {
   p.poly(neck, col, 11);
   const head = ellPts(560, by - 205, 72, 38, 0, 360, 32);
   p.shadedFill(head, col, dark, light, 72); p.inkRing(head, 11, thickAngle(light));
-  p.line([[470, by - 215], [430, by - 140], [410, by - 60]], "#5a3420", 22);
+  p.line([[470, by - 215], [430, by - 140], [410, by - 60]], "#6a6470", 22);
   p.poly([[505, by - 245], [520, by - 290], [535, by - 238]], col, 9);
   p.ell(548, by - 222, 15, 15, "#ffffff", 6); p.dot(553, by - 220, 6);
   p.dot(612, by - 180, 6);
