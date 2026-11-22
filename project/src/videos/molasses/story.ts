@@ -204,7 +204,7 @@ const S4c = (f: number) => dolly([0.1, 1.65, -14.2], [-0.55, 1.45, -18.2], pushK
 const S5a = (f: number) => zoom([44, 6.5, 4], [6, 6, -16], 46, pushK(f, 571, 0.002));
 const S5b = (f: number) => dolly([THERMO[0] + 0.5, THERMO[1] + 0.1, 7.1], [THERMO[0], THERMO[1], THERMO[2]], pushK(f, 634, 0.003, 0.006, 26), { fov: 32 });
 // ---- shot 6: groaning tank, rivets ----
-const S6a = (f: number) => dolly([9, 1.0, -6.2], [0, 7.5, -30], pushK(f, 668, 0.002), { fov: 52 });
+const S6a = (f: number) => dolly([10, 1.6, -2], [0, 8, -30], pushK(f, 668, 0.002), { fov: 58 }); // tank silhouette + nervous neighbours
 const S6b = (f: number) => dolly([2.4, 5.2, -15.2], [0.4, 5.0, -18.35], pushK(f, 705, 0.002), { fov: 34 });
 const S6c = (f: number) => dolly([3.6, 5.5, -14.2], [0.4, 5.0, -18.35], pushK(f, 724, 0.003), { fov: 38, roll: 0.04 });
 // ---- shot 7: lunch, split ----

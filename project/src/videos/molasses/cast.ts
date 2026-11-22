@@ -259,9 +259,9 @@ const groan = (out: Stage, cam: CamInfo, t: number, f: number) => {
   // strain ticks on the wall + neighbours on the street turning to look
   if (f < 705) {
     const pts: V3[] = [[-5, 3, zWall(-5) + 0.3], [4, 6, zWall(4) + 0.3], [0, 9, zWall(0) + 0.3]];
-    pts.forEach(([x, y, z], i) => { const u = q((t * 1.3 + i * 0.37) % 1, 30); out.fx.push({ key: `creak${u}`, cw: 300, ch: 300, draw: (p) => fxCreak(p, u), x, y, z, w: 1.4, h: 1.4, rot: i * 0.6 - 0.6 }); });
-    stand(out, cam, t, 50, FOLK[0], "n0", 4.2, -9.0, { expr: "nervous", look: -1, prop: ["bucket", 0.6] });
-    stand(out, cam, t, 51, FOLK[1], "n1", 2.6, -8.7, { expr: "nervous" });
+    pts.forEach(([x, y, z], i) => { const u = q((t * 1.3 + i * 0.37) % 1, 30); out.fx.push({ key: `creak${u}`, cw: 300, ch: 300, draw: (p) => fxCreak(p, u), x, y, z, w: 2.6, h: 2.6, rot: i * 0.6 - 0.6 }); });
+    stand(out, cam, t, 50, FOLK[0], "n0", 6.6, -8.2, { expr: "nervous", look: -1, prop: ["bucket", 0.6] });
+    stand(out, cam, t, 51, FOLK[1], "n1", 8.0, -10.0, { expr: "nervous" });
   }
   // rivets: each pops with a spark and flies out toward the street
   RIVETS.forEach((t0, i) => {
