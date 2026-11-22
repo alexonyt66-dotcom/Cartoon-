@@ -105,6 +105,10 @@ export type TankState = {
 };
 export type State = { tank: TankState; flood: Flood; bend: number; train: number | null; trainStop: boolean; season: Season };
 /** paint line on the tank (m up the wall) during "They painted the tank brown" */
+/** painters' swing stage height: lowered from the tank rim (462-492), then rides up with the paint line */
+export const STAGE_FROM = 462, STAGE_TO = 537;
+export const stageY = (f: number, paintH: number) =>
+  f < 492 ? (TANK_H - 1.6) * (1 - smooth((f - STAGE_FROM) / 30)) : Math.max(0, paintH - 1.15);
 const paintAt = (f: number) => (f < 495 ? 0 : TANK_H * 1.05 * smooth((f - 495) / 60));
 export const stateAt = (id: number, f: number): State => {
   const t = f / FPS, s = SHOTS[id - 1], tau = s.tau(t);
@@ -188,7 +192,7 @@ const S1d = (f: number) => { const H = horseX(f); return dolly([H + 2.4, 1.5, 7.
 // ---- shot 2: setting (harbour aerial -> low under the tank -> crane up) ----
 const S2a = (f: number) => zoom([-46, 30, -98], [2, 5, -22], 44, pushK(f, 162, 0.002));
 const S2b = (f: number) => dolly([20, 1.3, 1.0], [0, 8.5, -30], pushK(f, 240, 0.0018), { fov: 52 });
-const S2c = (f: number) => dolly([14, 20, -11], [0, 12, -30], pushK(f, 282, 0.002), { fov: 46 });
+const S2c = (f: number) => dolly([15, 20, 6], [0, 12, -30], pushK(f, 282, 0.002), { fov: 46 }); // stays south of the elevated deck while craning up
 // ---- shot 3: leaks + buckets ----
 const S3a = (f: number) => dolly([3.6, 1.65, -11.2], [-0.4, 1.35, -18.2], pushK(f, 352, 0.0025), { fov: 40 });
 const S3b = (f: number) => dolly([0.6, 1.3, -14.6], [-0.2, 1.1, -17.85], pushK(f, 402, 0.003, 0.006, 30), { fov: 42 });
@@ -253,7 +257,7 @@ const CAMS: Record<number, Key[]> = {
   2: [
     { f: 162, s: S2a },
     { f: 240, cut: true, s: S2b }, // cut on "five stories"
-    { f: 270, dur: 36, s: S2c }, // crane up on "holding"
+    { f: 270, cut: true, s: S2c }, // cut up high on "holding" (a crane would pass through the elevated deck)
   ],
   3: [
     { f: 352, s: S3a },

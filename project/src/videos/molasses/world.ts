@@ -16,6 +16,7 @@ import { Pool, Actor, Fx, stage } from "./cast";
 import {
   FPS, SHOTS, camAt, V3, smooth, clamp01, easeOut, FOREGROUND, ShotDef, TANK, TANK_R, TANK_H, EL_Z, EL_Y, EL_COLS, QUAY_Z, KITCHEN, COURT,
   stateAt, floodH, State, frontR, crestH, sheetD,
+  STAGE_FROM, STAGE_TO, stageY,
 } from "./story";
 
 // ---------------- assets ----------------
@@ -529,9 +530,9 @@ export class World {
     for (const g2 of this.girders) g2.s.mesh.visible = winter;
     this.floodMat.emissive.set(s.light === "golden" ? "#583206" : "#2a0f03");
     // ---- painters' swing stage (shot 4) ----
-    this.swingStage.visible = id === 4 && f >= 480 && f < 537;
+    this.swingStage.visible = id === 4 && f >= STAGE_FROM && f < STAGE_TO;
     if (this.swingStage.visible) {
-      const y = Math.max(0, st.tank.paintH - 1.15) + 0.12;
+      const y = stageY(f, st.tank.paintH) + 0.12;
       this.swingStage.position.set(0, y, TANK[2] + TANK_R + 0.55);
       for (const c of this.swingStage.children) if (c.name === "rope") c.scale.y = Math.max(0.1, TANK_H + 0.3 - y);
     }

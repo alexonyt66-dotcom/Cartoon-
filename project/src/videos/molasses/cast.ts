@@ -7,6 +7,7 @@ import {
 } from "./toon";
 import {
   FPS, SHOTS, V3, smooth, clamp01, State, TANK, TANK_R, KITCHEN, COURT, THERMO, RIVETS, W, frontX, horseX, crestH, floodH,
+  STAGE_FROM, STAGE_TO, stageY,
 } from "./story";
 import { NOINK } from "./ink";
 import { cardShade, blobMaterial, CARD_K } from "./cardshade";
@@ -237,8 +238,8 @@ const painting = (out: Stage, cam: CamInfo, t: number, f: number, st: State) => 
   const shrug = f >= 470 && f < 504;
   stand(out, cam, t, 30, BOSS, "boss", 4.3, -16.6, { expr: shrug ? "smile_closed" : "smile", prop: shrug ? "shrug" : null }, { swaps: [470 / FPS] });
   // painters on the swing stage, which rises with the paint line
-  const py = Math.max(0, st.tank.paintH - 1.15);
-  if (f >= 480 && f < 537) [-2.6, 0.1, 2.7].forEach((x, i) => {
+  const py = stageY(f, st.tank.paintH);
+  if (f >= STAGE_FROM && f < STAGE_TO) [-2.6, 0.1, 2.7].forEach((x, i) => {
     const z = zWall(x) + 0.55, br = q((t * 2.2 + i * 0.3) % 1, 24);
     out.places.push(person(cam, { i: 31 + i, o: PAINTER, okey: "painter" }, x, py + 0.12, z, front, { mode: "stand", expr: i === 1 ? "whistle" : "neutral", prop: ["brush", br], blink: lidAt(t, 31 + i) }));
   });
