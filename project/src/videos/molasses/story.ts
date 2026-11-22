@@ -192,7 +192,7 @@ const S1d = (f: number) => { const H = horseX(f); return dolly([H + 2.4, 1.5, 7.
 // ---- shot 2: setting (harbour aerial -> low under the tank -> crane up) ----
 const S2a = (f: number) => zoom([-46, 30, -98], [2, 5, -22], 44, pushK(f, 162, 0.002));
 const S2b = (f: number) => dolly([20, 1.3, 1.0], [0, 8.5, -30], pushK(f, 240, 0.0018), { fov: 52 });
-const S2c = (f: number) => dolly([15, 20, 6], [0, 12, -30], pushK(f, 282, 0.002), { fov: 46 }); // stays south of the elevated deck while craning up
+const S2c = (f: number) => dolly([15, 20, 6], [0, 12, -30], pushK(f, 270, 0.002), { fov: 46 }); // stays south of the elevated deck while craning up
 // ---- shot 3: leaks + buckets ----
 const S3a = (f: number) => dolly([3.6, 1.65, -11.2], [-0.4, 1.35, -18.2], pushK(f, 352, 0.0025), { fov: 40 });
 const S3b = (f: number) => dolly([0.6, 1.3, -14.6], [-0.2, 1.1, -17.85], pushK(f, 402, 0.003, 0.006, 30), { fov: 42 });
