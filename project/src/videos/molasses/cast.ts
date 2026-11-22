@@ -6,7 +6,7 @@ import {
   fxBurst, fxCreak, fxContact, fxShadow, fxDrip, fxDot, fxMolSplash, fxSmell, fxThermo, fxClipboard, fxDrop,
 } from "./toon";
 import {
-  FPS, SHOTS, V3, smooth, clamp01, State, TANK, TANK_R, KITCHEN, COURT, THERMO, RIVETS, W, frontX, horseX, crestH, floodH,
+  FPS, SHOTS, V3, smooth, clamp01, State, TANK, TANK_R, KITCHEN, COURT, THERMO, RIVETS, W, frontX, frontR, horseX, crestH, floodH,
   STAGE_FROM, STAGE_TO, stageY,
 } from "./story";
 import { NOINK } from "./ink";
@@ -189,10 +189,14 @@ const runner = (out: Stage, cam: CamInfo, t: number, i: number, o: Outfit, okey:
   blob(out, x, groundY(z), z);
 };
 /** brown splash crowns along the wave front (street) */
-const frontSplash = (out: Stage, t: number, fx: number, H: number) => {
+const frontSplash = (out: Stage, t: number, ts: number, H: number, straight = false) => {
+  // each crown sits on the curved front at its own z (the front spreads from the tank, so it is not a straight line)
+  const R = frontR(ts);
   for (let k = 0; k < 5; k++) {
-    const z = -5.5 + k * 2.8 + (hh(k, 3) - 0.5), u = q(((t * 1.4 + hh(k, 4)) % 1), 20);
-    out.fx.push({ key: `msplash${u}|${k % 3}`, cw: 600, ch: 400, draw: (p) => fxMolSplash(p, u, k % 3), x: fx + 1.2, y: 1.0 + H * 0.82, z, w: 4.2, h: 2.8 });
+    const z = -5.5 + k * 2.8 + (hh(k, 3) - 0.5), dz = z - TANK[2], x2 = R * R - dz * dz;
+    if (x2 <= 0) continue;
+    const x = straight ? frontX(ts) + 1.2 : TANK[0] + Math.sqrt(x2) + 1.2, u = q(((t * 1.4 + hh(k, 4)) % 1), 20);
+    out.fx.push({ key: `msplash${u}|${k % 3}`, cw: 600, ch: 400, draw: (p) => fxMolSplash(p, u, k % 3), x, y: 1.0 + H * 0.82, z, w: 4.2, h: 2.8 });
   }
 };
 const zWall = (x: number) => TANK[2] + Math.sqrt(Math.max(0, TANK_R * TANK_R - (x - TANK[0]) ** 2));
@@ -201,7 +205,7 @@ const zWall = (x: number) => TANK[2] + Math.sqrt(Math.max(0, TANK_R * TANK_R - (
 const FOLK = [0, 1, 2, 3, 4, 5].map((v) => NEIGHBOR(v));
 const hook = (out: Stage, cam: CamInfo, t: number, f: number) => {
   const ts = SHOTS[0].tau(t), F = frontX(ts), H = crestH(ts);
-  frontSplash(out, t, F, H);
+  frontSplash(out, t, ts, H, true); // the hook front is far out: a straight row reads fine
   // the horse gallops ahead of the wave, which slowly gains on it
   const hx = horseX(f), ph = q((t * 2.2) % 1, 24), mirror = cam.right.x < 0;
   const light = light2D(cam, mirror);
@@ -284,7 +288,7 @@ const lunch = (out: Stage, cam: CamInfo, t: number, f: number) => {
 const wave = (out: Stage, cam: CamInfo, t: number, f: number) => {
   const ts = SHOTS[7].tau(t), F = frontX(ts), H = crestH(ts);
   if (f < 970) {
-    frontSplash(out, t, F, H);
+    frontSplash(out, t, ts, H);
     const spots: [number, number][] = [[6, -2.2], [9, 2.8], [12.5, -4.8], [15, 0.6], [19, 4.4], [22, -1.6]];
     spots.forEach(([dx, z], i) => runner(out, cam, t, 70 + i, FOLK[(i + 2) % 6], `n${(i + 2) % 6}`, F + dx, z, i % 2 ? "shock" : "nervous"));
     if (f >= 899) {
